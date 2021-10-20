@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "./react-logo.svg";
 import nodejsLogo from "./nodejs-logo.svg";
 import "./App.css";
-
+import { Form } from "./components/Form"
 function App() {
   const [users, setUsers] = useState([]);
 
@@ -14,10 +14,19 @@ function App() {
     return () => {};
   }, []); // empty 2nd arg - only runs once
 
+  const handleSubmit = data => {
+    const json = JSON.stringify(data, null, 4);
+    console.clear();
+    console.log(json);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>React Node Template</h1>
+        <p>
+          <Form onSubmit={handleSubmit} />
+        </p>
         <p>
           <a
             className="App-link"
