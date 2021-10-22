@@ -3,6 +3,10 @@ import logo from "./react-logo.svg";
 import nodejsLogo from "./nodejs-logo.svg";
 import "./App.css";
 import { Form } from "./components/Form"
+import {w3cwebsocket as W3CWebSocket} from "websocket";
+
+const client = new W3CWebSocket('ws://localhost:4000');
+
 function App() {
   const [users, setUsers] = useState([]);
 
@@ -10,6 +14,11 @@ function App() {
     fetch("/api/users")
       .then(res => res.json())
       .then(json => setUsers(json.users));
+
+    client.onopen = () => {
+      console.log("Websocket client connected");
+    }
+
     // Specify how to clean up after this effect:
     return () => {};
   }, []); // empty 2nd arg - only runs once
@@ -20,13 +29,20 @@ function App() {
     console.log(json);
   };
 
+
+  function onButtonClicked(value) {
+    client.send(JSON.stringify({
+      type: "message",
+      msg: value
+    }));
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>React Node Template</h1>
-        <p>
-          <Form onSubmit={handleSubmit} />
-        </p>
+        <button onClick={() => onButtonClicked("HOLA!")}>Enviar mensaje</button>
+        <Form onSubmit={handleSubmit} />
         <p>
           <a
             className="App-link"

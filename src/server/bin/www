@@ -7,6 +7,7 @@
 const app = require("../app");
 const http = require("http");
 const ws = require("ws")
+const cors = require('cors');
 
 /**
  * Get port from environment and store in Express.
@@ -16,10 +17,22 @@ const port = normalizePort(process.env.PORT || "4000"); // cause React will serv
 app.set("port", port);
 
 /**
+ * Set cors
+ */
+app.use(cors({
+  origin: 'http://localhost'
+}));
+
+/**
  * Create HTTP server.
  */
 
 const server = http.createServer(app);
+
+/**
+ * websocket clients
+ */
+const clients = {};
 
 /**
  * Create WebSocket server.
@@ -30,7 +43,6 @@ wss.on('connection', ws => {
 
   //connection is up, let's add a simple simple event
   ws.on('message', message => {
-
     //log the received message and send it back to the client
     console.log('received: %s', message);
     ws.send(`Hello, you sent -> ${message}`);
